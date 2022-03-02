@@ -9,8 +9,8 @@
     "prebuild": "del-cli --force ./build",
     "build": "tsc",
     "prestart": "yarn build",
-    "start": "node -r dotenv/config build/app.js",
-    "start:dev": "ts-node-dev --transpile-only -r dotenv/config src/app.ts",
+    "start": "node -r dotenv/config build/index.js",
+    "start:dev": "ts-node-dev --transpile-only src/index.ts",
     "test": "jest --projects ./tests/integration --runInBand",
     "db:migrate": "npx prisma migrate dev"
   },
@@ -50,5 +50,8 @@
   ],
   "bugs": {
     "url": "https://github.com/felipebelinassi/typescript-graphql-boilerplate/issues"
+  },
+  "prisma": {
+    "schema": "src/shared/infra/database/prisma/schema.prisma"
   }
 }
