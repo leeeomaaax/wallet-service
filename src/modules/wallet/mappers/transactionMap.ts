@@ -1,4 +1,3 @@
-import { Wallet } from "../domain/wallet"
 import { Transaction } from "../domain/transaction"
 import { UniqueEntityID } from "../../../shared/domain/UniqueEntityID"
 import { Result } from "../../../shared/core/Result"

@@ -12,7 +12,7 @@ datasource db {
 
 model Transaction {
   id                  String        @id @default(uuid())
-  ownerId             String        @unique
+  ownerId             String
   description         String
   Wallet              Wallet        @relation(fields: [walletId], references: [id])
   walletId            String

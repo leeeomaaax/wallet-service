@@ -9,7 +9,7 @@ export interface WalletProps {
 }
 
 export class Wallet extends Entity<WalletProps> {
-  private currentSessionTransaction: Transaction
+  public currentSessionTransaction: Transaction
 
   get walletId(): UniqueEntityID {
     return this._id

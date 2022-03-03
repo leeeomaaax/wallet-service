@@ -19,7 +19,28 @@ export class WalletRepo implements IWalletRepo {
 
   public async save(wallet: Wallet): Promise<Result<void>> {
     try {
-      await this.prisma.wallet.create({ data: WalletMap.toPersistence(wallet) })
+      const exists = await prisma.wallet.findUnique({
+        where: { ownerId: wallet.ownerId.toString() },
+      })
+      console.log("exists", exists)
+
+      //TODO do wallet update/create and trasaction create as a transaction
+      if (!exists) {
+        await this.prisma.wallet.create({
+          data: WalletMap.toPersistence(wallet),
+        })
+      } else {
+        await this.prisma.wallet.update({
+          where: { ownerId: wallet.ownerId.toString() },
+          data: WalletMap.toPersistence(wallet),
+        })
+      }
+      if (!!wallet.currentSessionTransaction) {
+        await this.prisma.transaction.create({
+          data: TransactionMap.toPersistence(wallet.currentSessionTransaction),
+        })
+      }
+
       return Result.ok<void>()
     } catch (e) {
       if (e instanceof Prisma.PrismaClientKnownRequestError) {
