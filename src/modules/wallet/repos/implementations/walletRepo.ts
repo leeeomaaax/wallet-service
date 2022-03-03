@@ -22,7 +22,6 @@ export class WalletRepo implements IWalletRepo {
       const exists = await prisma.wallet.findUnique({
         where: { ownerId: wallet.ownerId.toString() },
       })
-      console.log("exists", exists)
 
       //TODO do wallet update/create and trasaction create as a transaction
       if (!exists) {

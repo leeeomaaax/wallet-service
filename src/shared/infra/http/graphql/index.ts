@@ -2,6 +2,7 @@ import { ApolloServer, gql } from "apollo-server-express"
 import { create } from "domain"
 import { createWallet } from "../../../../modules/wallet/useCases/wallet/createWallet"
 import { addFundsToWallet } from "../../../../modules/wallet/useCases/wallet/addFundsToWallet"
+import { subtractFundsFromWallet } from "../../../../modules/wallet/useCases/wallet/subtractFundsFromWallet"
 // import { PostDetailsMap } from "../../../../modules/forum/mappers/postDetailsMap"
 // import { GraphQLDateTime } from "graphql-iso-date"
 // import { memberRepo } from "../../../../modules/forum/repos"
@@ -63,6 +64,7 @@ const typeDefs = gql`
   type Mutation {
     createWallet(ownerId: String!): Generic
     addFundsToWallet(ownerId: String!, value: Int!): Generic
+    subtractFundsFromWallet(ownerId: String!, value: Int!): Generic
     #     userLogin(username: String!, password: String!): UserLoginResponse!
     #     userCreate(
     #       email: String!
@@ -147,6 +149,24 @@ const graphQLServer = new ApolloServer({
         const { ownerId, value } = args
         try {
           const result = await addFundsToWallet.execute({
+            ownerId,
+            value,
+          })
+          if (result.isLeft()) {
+            return result.value.errorValue()
+          } else {
+            return {
+              message: result.value.getValue(),
+            }
+          }
+        } catch (err) {
+          return { message: err.toString() }
+        }
+      },
+      subtractFundsFromWallet: async (parent, args, context) => {
+        const { ownerId, value } = args
+        try {
+          const result = await subtractFundsFromWallet.execute({
             ownerId,
             value,
           })
