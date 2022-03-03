@@ -10,34 +10,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Transactions {
+model Transaction {
   id                  String        @id @default(uuid())
   ownerId             String        @unique
   description         String
-  Wallet              Wallet       @relation(fields: [walletId], references: [id])
+  Wallet              Wallet        @relation(fields: [walletId], references: [id])
   walletId            String
-  paymentMethodId     String
   type                String // debt | credit
-  debtWithheldValue   Int
-  debtSettledValue    Int
-  debtWMetadata       String
-  
-  creditPaymentMethod PaymentMethod @relation(fields: [paymentMethodId], references: [id])
-  creditValue         Int
-  creditStripeState   String
-  
-}
-
-model PaymentMethod {
-  id                    String         @id @default(uuid())
-  ownerId               String         
-  type                  String
-  creditCardProvider    String
-  creditCardStripeToken String         @unique
-  creditCardLast4Digits String
-  Wallet                Wallet        @relation(fields: [walletId], references: [id])
-  walletId              String
-  Transactions          Transactions[]
+  value               Int
 }
 
 model Wallet {
@@ -46,6 +26,5 @@ model Wallet {
   updatedAt      DateTime        @updatedAt
   balance        Int             @default(0)
   ownerId        String          @unique
-  paymentMethods PaymentMethod[]
-  transactions   Transactions[]
+  transactions   Transaction[]
 }

@@ -1,5 +1,6 @@
 import { ApolloServer, gql } from "apollo-server-express"
-// import { getRecentPosts } from "../../../../modules/forum/useCases/post/getRecentPosts"
+import { create } from "domain"
+import { createWallet } from "../../../../modules/wallet/useCases/wallet/createWallet"
 // import { PostDetailsMap } from "../../../../modules/forum/mappers/postDetailsMap"
 // import { GraphQLDateTime } from "graphql-iso-date"
 // import { memberRepo } from "../../../../modules/forum/repos"
@@ -37,23 +38,36 @@ const typeDefs = gql`
   #     accessToken: String!
   #     refreshToken: String!
   #   }
-
-  #   type Error {
-  #     message: String!
+  #   type UserLoginSuccess {
+  #     accessToken: String!
+  #     refreshToken: String!
   #   }
+
+  type Generic {
+    message: String!
+  }
+
+  type Success {
+    message: String!
+  }
+
+  type Error {
+    message: String!
+  }
 
   #   union UserLoginResponse = UserLoginSuccess | Error
 
-  #   union UserCreateResponse = User | Error
+  union WalletCreateResponse = Success | Error
 
-  #   type Mutation {
-  #     userLogin(username: String!, password: String!): UserLoginResponse!
-  #     userCreate(
-  #       email: String!
-  #       username: String!
-  #       password: String!
-  #     ): UserCreateResponse!
-  #   }
+  type Mutation {
+    createWallet(ownerId: String!): Generic
+    #     userLogin(username: String!, password: String!): UserLoginResponse!
+    #     userCreate(
+    #       email: String!
+    #       username: String!
+    #       password: String!
+    #     ): UserCreateResponse!
+  }
 
   #   type User {
   #     username: String!
@@ -96,39 +110,39 @@ const graphQLServer = new ApolloServer({
   typeDefs,
   resolvers: {
     // DateTime: GraphQLDateTime,
-    // Mutation: {
-    //   userLogin: async (parent, args, context) => {
-    //     const { username, password } = args
-    //     try {
-    //       const result = await loginUseCase.execute({ username, password })
-    //       if (result.isLeft()) {
-    //         return result.value.errorValue()
-    //       } else {
-    //         return result.value.getValue()
-    //       }
-    //     } catch (err) {
-    //       return { message: err.toString() }
-    //     }
-    //   },
-    //   userCreate: async (parent, args, context) => {
-    //     const { username, password, email } = args
-    //     try {
-    //       const result = await createUserUseCase.execute({
-    //         username,
-    //         password,
-    //         email,
-    //       })
-    //       if (result.isLeft()) {
-    //         return result.value.errorValue()
-    //       } else {
-    //         const user = await getUserByUserName.execute({ username })
-    //         return UserMap.toDTO(user.value.getValue() as User)
-    //       }
-    //     } catch (err) {
-    //       return { message: err.toString() }
-    //     }
-    //   },
-    // },
+    Mutation: {
+      //   userLogin: async (parent, args, context) => {
+      //     const { username, password } = args
+      //     try {
+      //       const result = await loginUseCase.execute({ username, password })
+      //       if (result.isLeft()) {
+      //         return result.value.errorValue()
+      //       } else {
+      //         return result.value.getValue()
+      //       }
+      //     } catch (err) {
+      //       return { message: err.toString() }
+      //     }
+      //   },
+      createWallet: async (parent, args, context) => {
+        const { ownerId } = args
+        try {
+          const result = await createWallet.execute({
+            ownerId,
+          })
+          if (result.isLeft()) {
+            return result.value.errorValue()
+          } else {
+            return {
+              status: "ok",
+              message: result.value.getValue(),
+            }
+          }
+        } catch (err) {
+          return { message: err.toString() }
+        }
+      },
+    },
     // Post: {
     //   memberPostedBy: async (post, args, context) => {
     //     const memberDetails = await memberRepo.getMemberByPostSlug(post.slug)
