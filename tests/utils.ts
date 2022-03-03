@@ -3,8 +3,8 @@ import { Container } from "typedi"
 import { buildSchema } from "type-graphql"
 import { ApolloServer } from "apollo-server-express"
 import { Connection, ConnectionOptions, useContainer } from "typeorm"
-import { dbEntities } from "../src2/repos"
-import createDbConnection from "../src2/database"
+import { dbEntities } from "../src.deprecated/repos"
+import createDbConnection from "../src.deprecated/database"
 
 const testDbConfig: ConnectionOptions = {
   type: "postgres",

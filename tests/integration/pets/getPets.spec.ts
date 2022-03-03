@@ -6,7 +6,7 @@ import {
   createTestServer,
   clearTestDb,
 } from "../../utils"
-import Pets from "../../../src2/repos/Pets"
+import Pets from "../../../src.deprecated/repos/Pets"
 
 let testConnection: Connection
 
