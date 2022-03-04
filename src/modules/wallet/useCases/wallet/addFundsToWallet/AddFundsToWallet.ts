@@ -1,7 +1,6 @@
 import { UseCase } from "../../../../../shared/core/UseCase"
 import { IWalletRepo } from "../../../repos/walletRepo"
 import { UniqueEntityID } from "../../../../../shared/domain/UniqueEntityID"
-import { Wallet } from "../../../domain/wallet"
 import { Either, Result, left, right } from "../../../../../shared/core/Result"
 import { AddFundsToWalletDTO } from "./AddFundsToWalletDTO"
 import { AddFundsToWalletErrors } from "./AddFundsToWalletErrors"

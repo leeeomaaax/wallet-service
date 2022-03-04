@@ -7,6 +7,9 @@ import { Result } from "../../../../shared/core/Result"
 import { UniqueEntityID } from "../../../../shared/domain/UniqueEntityID"
 
 import { PrismaClient, Prisma } from "@prisma/client"
+import { getQldbDriver } from "../../../../shared/infra/database/qldb"
+import { TransactionExecutor } from "amazon-qldb-driver-nodejs"
+import { dom, dumpBinary, load } from "ion-js"
 
 const prisma = new PrismaClient()
 
@@ -35,13 +38,35 @@ export class WalletRepo implements IWalletRepo {
         })
       }
       if (!!wallet.currentSessionTransaction) {
+        const transactionPersitenceObj = TransactionMap.toPersistence(
+          wallet.currentSessionTransaction
+        )
+        const qldbDriver = getQldbDriver("wallet-dev")
+        await qldbDriver.executeLambda(async (txn: TransactionExecutor) => {
+          // Check if doc with GovId:TOYENC486FH exists
+          // This is critical to make this transaction idempotent
+          const results: dom.Value[] = (
+            await txn.execute(
+              "SELECT * FROM wallet_transaction WHERE id = ?",
+              transactionPersitenceObj.id
+            )
+          ).getResultList()
+          // Insert the document after ensuring it doesn't already exist
+          if (results.length == 0) {
+            const doc: Record<string, string | number> =
+              transactionPersitenceObj
+            await txn.execute("INSERT INTO wallet_transaction ?", doc)
+          }
+        })
+
         await this.prisma.transaction.create({
-          data: TransactionMap.toPersistence(wallet.currentSessionTransaction),
+          data: transactionPersitenceObj,
         })
       }
 
       return Result.ok<void>()
     } catch (e) {
+      console.log(e)
       if (e instanceof Prisma.PrismaClientKnownRequestError) {
         // The .code property can be accessed in a type-safe manner
         return Result.fail<void>(`Prisma client error: ${e.code}`)
