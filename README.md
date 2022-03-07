@@ -28,6 +28,7 @@ A [SOLID](https://khalilstemmler.com/articles/solid-principles/solid-typescript/
 ### src/modules/\*/domain/\*
 
 **Domain objects** (aggregate roots and value objects) where **business logic lives**.
+
 In an ideal world, non-tech/Product people should be able to read those files and see the key business rules defined for each domain object.
 eg. for a given wallet, you can add funds or subtract funds.
 
@@ -58,7 +59,7 @@ This helps a lot with evolving the database schemas as the developer has to acti
 
 Empty interfaces that are going to describe the contract between the service (database/third party services/etc) and the application.
 
-This is going to facilitate testing and also prevent that service specific logic leaks to the application layer.
+This is going to facilitate testing and also **prevent that service specific logic leaks to the application layer**.
 
 ## src/modules/\*/repos/\*/implementations/\*
 
