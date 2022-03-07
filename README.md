@@ -23,9 +23,9 @@ A [SOLID](https://khalilstemmler.com/articles/solid-principles/solid-typescript/
 
 0. Prerequisites
 
-   - running postgreSQL
-   - working AWS Profile configured on environment
-   - QLDB ledger named 'wallet-dev' configured on AWS console
+- running postgreSQL
+- working AWS Profile configured on environment
+- QLDB ledger named 'wallet-dev' configured on AWS console
 
 1. install dependencies
 
