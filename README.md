@@ -1,160 +1,69 @@
-# 🚀 TypeScript GraphQL API Boilerplate
+# Wallet Service POC
 
-A simple GraphQL API boilerplate using Express, Apollo Server, TypeDI and much more.  
-This project was developed for study purposes and also for a GraphQL API presentation. I pretend to maintain this project and add new features to it, so feel free to suggest improvements and give any feedback 😊.
+A [SOLID](https://khalilstemmler.com/articles/solid-principles/solid-typescript/) wallet service built with TypeScript using [clean architecture](https://khalilstemmler.com/articles/software-design-architecture/organizing-app-logic/) and [DDD best practices](https://khalilstemmler.com/articles/domain-driven-design-intro/) inpired on [DDD-forum](https://github.com/stemmlerjs/ddd-forum).
 
-_Documentation was inspired by the [Express TypeScript Boilerplate](https://github.com/w3tecch/express-typescript-boilerplate) documentation by W3Tech. Check it out, it's very nice._
+### TODO add gif
 
-## Table of Contents
+## My objectives with this POC:
 
-- [🚀 TypeScript GraphQL API Boilerplate](#-typescript-graphql-api-boilerplate)
-  - [Table of Contents](#table-of-contents)
-  - [Getting Started](#getting-started)
-    - [Step 1: Set up the development environment](#step-1-set-up-the-development-environment)
-    - [Step 2: Clone the project](#step-2-clone-the-project)
-    - [Step 3: Install dependencies](#step-3-install-dependencies)
-    - [Step 3: Set up the local database](#step-3-set-up-the-local-database)
-    - [Step 4: Init the application](#step-4-init-the-application)
-  - [Scripts and Tasks](#scripts-and-tasks)
-    - [Install](#install)
-    - [Database Migration](#database-migration)
-    - [Building the project and run it](#building-the-project-and-run-it)
-    - [Running in dev mode](#running-in-dev-mode)
-  - [Project Structure](#project-structure)
-  - [Environment Variables](#environment-variables)
-  - [Dependencies Documentations](#dependencies-documentations)
-  - [Author](#author)
+- learn GraphQL+Apollo and how to plug the domain useCases to the queries and mutations
+- learn Prisma and how to use it's schema on our toDomain and toPersistence mappers
+- learn QLDB (ledger database)
 
-## Getting Started
+## Built with
 
-### Step 1: Set up the development environment
+- [Typescript](https://www.typescriptlang.org/)
+- [GraphQL](https://graphql.org/)
+- [Apollo Server](https://www.apollographql.com/)
+- [Prisma](https://www.prisma.io/) with [PostgreSQL](https://www.postgresql.org/)
+- [QLDB (Ledger Database)](https://aws.amazon.com/qldb/)
 
-You need to set up your development environment before you can do anything.
+## Running the project
 
-- Install [Node.js and NPM](https://nodejs.org/en/download/)
-- Make sure you have a recent version of [Docker](https://docs.docker.com/engine/installation/) installed, since it will be used for running the database locally
-- Install yarn globally. This is **optional** since you can use npm, but be aware that the documentation will mention the yarn scripts.
+0. Prerequisites
+
+   - running postgreSQL
+   - working AWS Profile configured on environment
+   - QLDB ledger named 'wallet-dev' configured on AWS console
+
+1. install dependencies
 
 ```bash
-npm i -g yarn
+yarn install
 ```
 
-### Step 2: Clone the project
-
-Fork or clone this project and then open it using your favorite IDE.
+2. copy .env.template file and edit it (working AWS profile needed)
 
 ```bash
-git clone git@github.com:felipebelinassi/typescript-graphql-boilerplate.git
-
-# Open the project directory
-cd typescript-graphql-boilerplate
+cp .env.template .env
 ```
 
-Copy the `.env.example` file and rename it to `.env`. In this file you have to add the required environment variables for the application to work. You can see the details regarding the variables in the [Environment Variables](#-environment-variables) section.
-
-### Step 3: Install dependencies
-
-After cloning the project, you need to install the required dependencies for it to run.
-
-```bash
-yarn
-```
-
-### Step 3: Set up the local database
-
-Run the following script to build your local database image (PostgreSQL) using Docker.
-
-```bash
-docker-compose up -d
-```
-
-This will build the database using the settings defined in the `docker-compose.yml` file. After that you can connect to the DB using some tool like DBeaver if you want.
-
-Then, after initializing the database, you need to run the migrations for it. Simple run the following script:
+3. run Prisma migrations to initialize local db
 
 ```bash
 yarn db:migrate
 ```
 
-This will run all the migration files and create the required tables at your local database.
-
-> This step uses the `ormconfig.json` file, so make sure the configs are the same as you defined in the docker-compose file
-
-### Step 4: Init the application
-
-Finally you can start your project with the following script.
+4. run project
 
 ```bash
 yarn start:dev
 ```
 
-> This will start a local server using `ts-node-dev`, which will watch for any file changes and will restart the server according to these changes.
-> The server address will be available to you as `http://localhost:{{port}}`. Port is the same you defined in the `.env` file
-
-## Scripts and Tasks
-
-All script are defined in the `package.json` file, but the most important ones are listed here.
-
-### Install
-
-- Install all dependencies with `yarn install`
-
-### Database Migration
-
-- To migrate your database run `yarn db:migrate`. This will create the required tables in your local database.
-
-### Building the project and run it
-
-- If you run the `yarn start` script, it will automatically trigger the `yarn prestart` script, which runs `yarn build`. The build script just runs the `tsc` compiler and generate the JavaScript files inside the `build` folder. After the compilation, the server will start.
-- There's also another script called `yarn prebuild`, which will be triggered before `yarn build`, and it simply removes the current `build` folder before transpiling the code again.
-- The server will be available at `http://localhost:{{port}}`.
-
-### Running in dev mode
-
-- Run `yarn start:dev` to start the project with `ts-node-dev`.
-- The server will be available at `http://localhost:{{port}}`
+GraphQL endpoint http://localhost:3000/graphql.
 
 ## Project Structure
 
-| Name                                | Description                                                                |
-| ----------------------------------- | -------------------------------------------------------------------------- |
-| **build/**                          | Compiled source files will be placed here                                  |
-| **src/**                            | Source files                                                               |
-| **src/config/**                     | Project configuration files                                                |
-| **src/entities/**                   | TypeORM Entities and repositories, separated by domain                     |
-| **src/graphql/resolvers/**          | GraphQL resolvers separated by domain and function (queries and mutations) |
-| **src/graphql/resolvers/\*/types/** | GraphQL object and input types                                             |
-| **src/database/**                   | Database configuration layer                                               |
-| **src/database/migrations/**        | Database migration scripts                                                 |
-| .env.example                        | Environment configurations example file                                    |
+### src/modules/\*
 
-## Environment Variables
+Subdomains of the application.
 
-The list bellow features the environment variables defined in the application. All variables are **required**.
+### src/modules/\*/domain/\*
 
-| Environment | Description                      |
-| ----------- | -------------------------------- |
-| PORT        | Port where the server will start |
-| DB_HOST     | Database host                    |
-| DB_PORT     | Database port number             |
-| DB_USER     | Database username                |
-| DB_PASSWORD | Database user password           |
-| DB_NAME     | Database name                    |
+Domain objects where business logic lives.
+In an ideal world, non-tech/Product people should be able to read those files and see the key business rules defined for each domain object.
 
-## Dependencies Documentations
+### src/modules/\*/useCases/\*
 
-| Dependency                                                                                    | Description                                                                                                                                 |
-| --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Express](https://expressjs.com/)                                                             | Express is a minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications. |
-| [dotenv](https://www.npmjs.com/package/dotenv)                                                | Loads environment variables from a .env file into process.env.                                                                              |
-| [ts-node-dev](https://www.npmjs.com/package/ts-node-dev)                                      | Tweaked version of node-dev that uses ts-node under the hood for watching code changes and restarting the server.                           |
-| [Joi](https://joi.dev/)                                                                       | The most powerful schema description language and data validator for JavaScript                                                             |
-| [Apollo Server Express](https://www.apollographql.com/docs/apollo-server/v1/servers/express/) | Express integration Apollo Server, an open-source and spec-compliant GraphQL server.                                                        |
-| [GraphQL](http://graphql.org/graphql-js/)                                                     | A query language for your API.                                                                                                              |
-| [TypeGraphQL](https://typegraphql.com/)                                                       | Modern framework for GraphQL API in Node.js.                                                                                                |
-| [TypeDI](https://github.com/pleerock/typedi)                                                  | Dependency Injection for TypeScript.                                                                                                        |
-
-## Author
-
-👨‍💻 Felipe Belinassi  
-📫 Reach me at my [email](mailto:felipebelinassi@gmail.com) or [LinkedIn](https://www.linkedin.com/in/felipe-belinassi/).
+useCases that will instanciate the domaing objects from memory, implement the business logic from the domain objects and persist changes if necessary and or just return some data.
+In an ideal world, non-tech/Product people should be able to read those files and understand see all which use case(s) implements each user story.
