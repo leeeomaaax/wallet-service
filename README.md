@@ -9,6 +9,7 @@ A [SOLID](https://khalilstemmler.com/articles/solid-principles/solid-typescript/
 - learn GraphQL+Apollo and how to plug the domain useCases to the queries and mutations
 - learn Prisma and how to use it's schema on our toDomain and toPersistence mappers
 - learn QLDB (ledger database)
+- document with my own words what I believe are the main advantages of this software design approach
 
 ## Built with
 
@@ -62,8 +63,15 @@ Subdomains of the application.
 
 Domain objects where business logic lives.
 In an ideal world, non-tech/Product people should be able to read those files and see the key business rules defined for each domain object.
+eg. for a given wallet, you can add funds or subtract funds.
 
 ### src/modules/\*/useCases/\*
 
-useCases that will instanciate the domaing objects from memory, implement the business logic from the domain objects and persist changes if necessary and or just return some data.
-In an ideal world, non-tech/Product people should be able to read those files and understand see all which use case(s) implements each user story.
+useCases that will instanciate the domain objects from memory, implement the business logic from the domain objects, persist changes if necessary and/or just return some data as a DTO.
+In an ideal world, non-tech/Product people should be able to read those useCase names and understand/see how they implement each user story. A user story may need one or more useCases to be satisfied.
+
+## Possible next steps:
+
+- use [TypeGraphQL](https://typegraphql.com/) to define the graphQL schemas in the same place as the DTOs (inline with decorators)
+- authentication middleware
+- authorization living inside the useCase to prevent consumer of the useCase from forgetting to authorize.
