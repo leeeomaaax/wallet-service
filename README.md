@@ -57,21 +57,46 @@ GraphQL endpoint http://localhost:3000/graphql.
 
 ### src/modules/\*
 
-Subdomains of the application.
+**Subdomains of the application**. Groupings of business logic that makes sense in and of itself.
 
 ### src/modules/\*/domain/\*
 
-Domain objects where business logic lives.
+**Domain objects** (aggregate roots and value objects) where **business logic lives**.
 In an ideal world, non-tech/Product people should be able to read those files and see the key business rules defined for each domain object.
 eg. for a given wallet, you can add funds or subtract funds.
 
 ### src/modules/\*/useCases/\*
 
-useCases that will instanciate the domain objects from memory, implement the business logic from the domain objects, persist changes if necessary and/or just return some data as a DTO.
-In an ideal world, non-tech/Product people should be able to read those useCase names and understand/see how they implement each user story. A user story may need one or more useCases to be satisfied.
+useCases that will:
+
+- instanciate the domain objects from memory
+- execute the business logic from the domain objects
+- persist changes if necessary
+- return some data as a DTO.
+  In an ideal world, non-tech/Product people should be able to read those useCase names and understand/see how they implement each **user story**. A user story may need one or more useCases to be satisfied.
+
+### src/modules/\*/dtos/\*
+
+Api contracts between frontend and backend. In a REST api, this would be the objects sent to the frontend. Graphql adds a new layer on top of the DTO that allows the frontend to query only the fields needed.
+
+### src/modules/\*/mappers/\*
+
+**Adapters that will strongly type anything comming in and out of our main application logic.** eg. Database <-> application -> Frontend DTO
+This helps a lot with evolving the database schemas as the developer has to activly decide how to implement new fields and disencorages changing field types.
+
+### src/modules/\*/repos/\*
+
+Empty interfaces that are going to describe the contract between the service (database/third party services/etc) and the application. This is going to facilitate testing and also prevent that service specific logic leaks to the application layer.
+
+## src/modules/\*/repos/\*/implementations/\*
+
+Actual implementations of the services (database/third party services/etc) that are going to be injected at runtime.
 
 ## Possible next steps:
 
 - use [TypeGraphQL](https://typegraphql.com/) to define the graphQL schemas in the same place as the DTOs (inline with decorators)
-- authentication middleware
+- authentication middleware with apollo service
 - authorization living inside the useCase to prevent consumer of the useCase from forgetting to authorize.
+- move graphql queries/mutations that are relevant to a a subdomain to the respective src/modules/\*/infra/http/graphql/index.ts location
+- useCase tests injecting mock implementations of the repos
+- docker setting up whole environment
