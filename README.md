@@ -94,6 +94,7 @@ Actual implementations of the services (database/third party services/etc) that 
 
 ## Possible next steps:
 
+- useCase that verifies that postgreSQL data has not been tempered by checking against QLDB ledger.
 - use [TypeGraphQL](https://typegraphql.com/) to define the graphQL schemas in the same place as the DTOs (inline with decorators)
 - authentication middleware with apollo service
 - authorization living inside the useCase to prevent consumer of the useCase from forgetting to authorize.
