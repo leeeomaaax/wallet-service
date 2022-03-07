@@ -96,3 +96,8 @@ $ yarn db:migrate
 $ yarn start:dev
 # GraphQL endpoint http://localhost:3000/graphql.
 ```
+
+## Links
+
+[How Do I Know I Need a Ledger Database? An Introduction to Amazon QLDB](https://www.youtube.com/watch?v=blIku5CWYzU)
+[Amazon QLDB Double Entry Sample App](https://github.com/aws-samples/amazon-qldb-double-entry-sample-java)
