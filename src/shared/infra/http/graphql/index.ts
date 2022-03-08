@@ -118,19 +118,6 @@ const graphQLServer = new ApolloServer({
   resolvers: {
     // DateTime: GraphQLDateTime,
     Mutation: {
-      //   userLogin: async (parent, args, context) => {
-      //     const { username, password } = args
-      //     try {
-      //       const result = await loginUseCase.execute({ username, password })
-      //       if (result.isLeft()) {
-      //         return result.value.errorValue()
-      //       } else {
-      //         return result.value.getValue()
-      //       }
-      //     } catch (err) {
-      //       return { message: err.toString() }
-      //     }
-      //   },
       createWallet: async (parent, args, context) => {
         const { ownerId } = args
         try {
@@ -188,7 +175,6 @@ const graphQLServer = new ApolloServer({
     Wallet: {
       transactions: async (wallet, args, context) => {
         const { ownerId } = wallet
-        console.log("ereee")
         try {
           const result = await getTransactionsByOwnerId.execute({
             ownerId,
@@ -222,37 +208,6 @@ const graphQLServer = new ApolloServer({
           return { message: err.toString() }
         }
       },
-      //   userGetCurrentUser: async (parent, args, context) => {
-      //     console.log(args)
-      //     console.log(context.userClaims)
-      //     return { username: "hi" }
-      //   },
-      //   posts: async (parent, args, context) => {
-      //     let response
-      //     const suppliedFilterType = args.hasOwnProperty("filterType")
-
-      //     if (!suppliedFilterType) {
-      //       throw new Error("Need to supply filter type")
-      //     }
-
-      //     switch (args.filterType) {
-      //       case "POPULAR":
-      //         response = await getPopularPosts.execute({})
-      //         break
-      //       case "NEW":
-      //         response = await getRecentPosts.execute({})
-      //         break
-      //       default:
-      //         throw new Error("Valid filtertypes are NEW and POPULAR.")
-      //     }
-
-      //     if (response.isRight()) {
-      //       const postDetails = response.value.getValue()
-      //       return postDetails.map(PostDetailsMap.toDTO)
-      //     } else {
-      //       throw response.value
-      //     }
-      //   },
     },
   },
 })
