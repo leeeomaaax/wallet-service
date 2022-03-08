@@ -74,6 +74,7 @@ Actual implementations of the services (database/third party services/etc) that 
 - move graphql queries/mutations that are relevant to a subdomain to the respective src/modules/\*/infra/http/graphql/index.ts location
 - useCase tests injecting mock implementations of the repos
 - docker setting up whole environment
+- improve error handling by strong typing all errors with the Result class and at the graphQL level
 
 ## Running the project
 

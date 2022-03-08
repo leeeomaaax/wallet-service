@@ -1,5 +1,6 @@
 import { Transaction } from "../domain/transaction"
 import { UniqueEntityID } from "../../../shared/domain/UniqueEntityID"
+import { TransactionDTO } from "../dtos/transactionDTO"
 import { Result } from "../../../shared/core/Result"
 import { Transaction as TransactionPersistenceSchema } from "@prisma/client"
 
@@ -34,6 +35,14 @@ export class TransactionMap {
       id: transaction.transactionId.toString(),
       ownerId: transaction.ownerId.toString(),
       walletId: transaction.walletId.toString(),
+      type: transaction.type,
+      value: transaction.value,
+      description: transaction.description,
+    }
+  }
+
+  public static toDTO(transaction: Transaction): TransactionDTO {
+    return {
       type: transaction.type,
       value: transaction.value,
       description: transaction.description,

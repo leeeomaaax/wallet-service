@@ -3,17 +3,8 @@ import { create } from "domain"
 import { createWallet } from "../../../../modules/wallet/useCases/wallet/createWallet"
 import { addFundsToWallet } from "../../../../modules/wallet/useCases/wallet/addFundsToWallet"
 import { subtractFundsFromWallet } from "../../../../modules/wallet/useCases/wallet/subtractFundsFromWallet"
-// import { PostDetailsMap } from "../../../../modules/forum/mappers/postDetailsMap"
-// import { GraphQLDateTime } from "graphql-iso-date"
-// import { memberRepo } from "../../../../modules/forum/repos"
-// import { MemberDetailsMap } from "../../../../modules/forum/mappers/memberDetailsMap"
-// import { getPopularPosts } from "../../../../modules/forum/useCases/post/getPopularPosts"
-// import { middleware } from ".."
-// import { loginUseCase } from "../../../../modules/users/useCases/login"
-// import { createUserUseCase } from "../../../../modules/users/useCases/createUser"
-// import { getUserByUserName } from "../../../../modules/users/useCases/getUserByUserName"
-// import { UserMap } from "../../../../modules/users/mappers/userMap"
-// import { User } from "../../../../modules/users/domain/user"
+import { getWalletByOwnerId } from "../../../../modules/wallet/useCases/wallet/getWalletByOwnerId"
+import { getTransactionsByOwnerId } from "../../../../modules/wallet/useCases/wallet/getTransactionsByOwnerId"
 
 const typeDefs = gql`
   #   scalar DateTime
@@ -23,9 +14,21 @@ const typeDefs = gql`
   #     NEW
   #   }
 
+  type Transaction {
+    type: String!
+    value: Int!
+    description: String!
+  }
+
+  type Wallet {
+    ownerId: String!
+    balance: Int!
+    transactions: [Transaction!]!
+  }
+
   type Query {
     healthcheck: Healthcheck
-    #   posts(filterType: String): [Post]!
+    wallet(ownerId: String): Wallet!
     #   postBySlug(slug: String): Post
 
     #   userGetCurrentUser: User
@@ -182,16 +185,43 @@ const graphQLServer = new ApolloServer({
         }
       },
     },
-    // Post: {
-    //   memberPostedBy: async (post, args, context) => {
-    //     const memberDetails = await memberRepo.getMemberByPostSlug(post.slug)
-    //     return MemberDetailsMap.toDTO(memberDetails)
-    //   },
-    // },
+    Wallet: {
+      transactions: async (wallet, args, context) => {
+        const { ownerId } = wallet
+        console.log("ereee")
+        try {
+          const result = await getTransactionsByOwnerId.execute({
+            ownerId,
+          })
+          if (result.isLeft()) {
+            return result.value.errorValue()
+          } else {
+            return result.value.getValue()
+          }
+        } catch (err) {
+          return { message: err.toString() }
+        }
+      },
+    },
     Query: {
       healthcheck: () => ({
         status: "ok",
       }),
+      wallet: async (parent, args, context) => {
+        const { ownerId } = args
+        try {
+          const result = await getWalletByOwnerId.execute({
+            ownerId,
+          })
+          if (result.isLeft()) {
+            return result.value.errorValue()
+          } else {
+            return result.value.getValue()
+          }
+        } catch (err) {
+          return { message: err.toString() }
+        }
+      },
       //   userGetCurrentUser: async (parent, args, context) => {
       //     console.log(args)
       //     console.log(context.userClaims)

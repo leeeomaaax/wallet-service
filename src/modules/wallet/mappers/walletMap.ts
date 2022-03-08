@@ -1,4 +1,5 @@
 import { Wallet } from "../domain/wallet"
+import { WalletDTO } from "../dtos/walletDTO"
 import { UniqueEntityID } from "../../../shared/domain/UniqueEntityID"
 import { Result } from "../../../shared/core/Result"
 import { Wallet as WalletPersistenceSchema } from "@prisma/client"
@@ -26,6 +27,13 @@ export class WalletMap {
       balance: wallet.balance,
       createdAt: new Date(), //TODO implement
       updatedAt: new Date(), //TODO implement
+    }
+  }
+
+  public static toDTO(wallet: Wallet): WalletDTO {
+    return {
+      ownerId: wallet.ownerId.toString(),
+      balance: wallet.balance,
     }
   }
 }
