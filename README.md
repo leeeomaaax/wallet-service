@@ -101,4 +101,5 @@ $ yarn start:dev
 ## Links
 
 [How Do I Know I Need a Ledger Database? An Introduction to Amazon QLDB](https://www.youtube.com/watch?v=blIku5CWYzU)
+
 [Amazon QLDB Double Entry Sample App](https://github.com/aws-samples/amazon-qldb-double-entry-sample-java)
