@@ -2,7 +2,7 @@
 
 A [SOLID](https://khalilstemmler.com/articles/solid-principles/solid-typescript/) wallet service built with TypeScript using [clean architecture](https://khalilstemmler.com/articles/software-design-architecture/organizing-app-logic/) and [DDD best practices](https://khalilstemmler.com/articles/domain-driven-design-intro/) inspired on [DDD-forum](https://github.com/stemmlerjs/ddd-forum).
 
-![DDDwallet](https://user-images.githubusercontent.com/17117431/157273685-07c1ce62-a38b-469d-a6cd-34f436444031.mp4)
+[Video demo](https://user-images.githubusercontent.com/17117431/157273685-07c1ce62-a38b-469d-a6cd-34f436444031.mp4)
 
 ## My objectives with this POC:
 
