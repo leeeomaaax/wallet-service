@@ -132,9 +132,7 @@ const updateBalance = async (accountId: string, amount: number) => {
     // const ionAmount = load(amount)
     await qldb.executeLambda(async (txn: TransactionExecutor) => {
       await txn.execute(
-        `UPDATE accounts AS a
-WHERE a.accountId = 'wallet-1'
-SET a.balance = 3`
+        `UPDATE accounts SET balance = 3 WHERE accountId = 'wallet-1'`
       )
     })
   } catch (e) {
@@ -190,6 +188,23 @@ const getAllEntriesForAccount = async (accountId: string) => {
   }
 }
 
+const getAccountBalanceFromAccountDoc = async (accountId: string) => {
+  try {
+    await qldb.executeLambda(async (txn: TransactionExecutor) => {
+      const results: dom.Value[] =
+        // `SELECT totalCredit - totalDebit AS total, (SELECT SUM(e.amount) FROM e WHERE e.type = 'credit') AS totalCredit, (SELECT SUM(e.amount) FROM e WHERE e.type = 'debit') AS totalDebit,
+        (
+          await txn.execute(
+            `SELECT * FROM accounts WHERE accountId = ?`,
+            accountId
+          )
+        ).getResultList()
+      console.log(JSON.stringify(results, null, 2))
+    })
+  } catch (e) {
+    console.log(e)
+  }
+}
 const getAccountBalanceFromTransactions = async (accountId: string) => {
   try {
     await qldb.executeLambda(async (txn: TransactionExecutor) => {
@@ -219,16 +234,25 @@ const execute = async () => {
   // await createAccount("wallet-2")
   // await createAccount("wallet-3")
   // await listAccounts()
-  await updateBalance("wallet-1", 3)
   // await newTransaction(entriesForTransfer2)
   // await newTransaction(entriesForTransfer2)
   // await newTransaction(entriesForTransfer1)
   await listAccounts()
-  // await listTransactions()
+  await listTransactions()
 
+  await updateBalance("wallet-1", 3)
+  // await getAccountBalanceFromAccountDoc("wallet-3")
   // await getTransactionsWithAccount("wallet-3")
-  // await getAllEntriesForAccount("wallet-2")
+  // await getAllEntriesForAccount("wallet-3")
   // await getAccountBalanceFromTransactions("wallet-2")
 }
 
 execute()
+
+// get the balance for account by summing all debits and credits? partially.
+// get the balance for account by getting the value from the account document? yes
+// get all entries to an account?
+// get all debits for account?
+// get all credits for account?
+// get all transactions for an account?
+// sum
